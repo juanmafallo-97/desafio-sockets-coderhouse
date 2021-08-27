@@ -63,7 +63,7 @@ const renderMessages = (messages) => {
   const chatHtml = `
   {{#each messages}}
         <div>
-          <span>{{this.email}} </span><span>{{this.content}} </span>
+          <span class="fw-bold text-primary">{{this.email}} </span>[<span class="text-danger">{{this.time}}</span>]: <span class="fst-italic">{{this.content}}</span>
         </div>
   {{/each}}
   `;
@@ -73,6 +73,23 @@ const renderMessages = (messages) => {
 };
 
 socket.on("messages", (messages) => {
-  console.log(messages);
   renderMessages(messages);
+});
+
+document.getElementById("message-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById("message-email").value;
+  const content = document.getElementById("message-content");
+  const time = new Date().toLocaleString();
+
+  const newMessage = {
+    email,
+    content: content.value,
+    time
+  };
+
+  socket.emit("new-message", newMessage);
+
+  content.value = "";
 });

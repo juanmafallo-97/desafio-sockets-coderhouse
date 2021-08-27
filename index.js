@@ -7,29 +7,37 @@ const io = require("socket.io")(httpServer, {
   }
 });
 const handlebars = require("express-handlebars");
-const ProductsApi = require("./api.js");
+const ProductsApi = require("./ProductsApi.js");
+const MessagesApi = require("./MessagesApi.js");
 
-const api = new ProductsApi("productos.json");
+const productsApi = new ProductsApi("products.json");
+const messagesApi = new MessagesApi("messages.json");
 
 const PORT = 4000;
 
-// Config del socket //
+/*  Config del socket  */
 io.on("connection", async (socket) => {
   console.log("Usuario conectado");
 
   //Mandamos los productos apenas se conecta un usuario
-  const products = await api.getAll();
+  const products = await productsApi.getAll();
   socket.emit("products", products);
 
   socket.on("new-product", async (product) => {
-    await api.save(product);
-    const updatedProducts = await api.getAll();
+    await productsApi.save(product);
+    const updatedProducts = await productsApi.getAll();
     io.sockets.emit("products", updatedProducts);
   });
 
   //Mandamos tambien los Mensajes
-  const messages = [{ email: "hola@algo.com", content: "Buenas!" }];
+  const messages = await messagesApi.getAll();
   socket.emit("messages", messages);
+
+  socket.on("new-message", async (message) => {
+    await messagesApi.save(message);
+    const updatedMessages = await messagesApi.getAll();
+    io.sockets.emit("messages", updatedMessages);
+  });
 });
 
 app.engine(

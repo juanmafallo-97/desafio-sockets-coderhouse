@@ -1,5 +1,5 @@
 const express = require("express");
-const ProductsApi = require("../../api.js");
+const ProductsApi = require("../../ProductsApi.js");
 
 const router = express.Router();
 const api = new ProductsApi("productos.json");
