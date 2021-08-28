@@ -27,7 +27,7 @@ const renderProducts = (products) => {
   if (!products[0]) hayProductos = false;
   const productsHtml = `
   {{#if hayProductos}}
-  <table class="table">
+  <table class="table table-dark">
     <thead>
       <tr>
         <th scope="col">Nombre</th>
@@ -38,9 +38,9 @@ const renderProducts = (products) => {
     <tbody>
       {{#each products}}
         <tr>
-          <th scope="row">{{this.title}}</th>
-          <td>{{this.price}}</td>
-          <td>imagen</td>
+          <th scope="row" class="align-middle">{{this.title}}</th>
+          <td class="align-middle">{{this.price}}</td>
+          <td class="align-middle"><img class="product-image" src={{this.thumbnail}}/></td>
         </tr>
       {{/each}}
     </tbody>
